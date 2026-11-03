@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./api-service.js" defer></script>
     <script src="./script.js" defer></script>
     <link rel="stylesheet" href="./styles.css">
     <title>Skill Swap - Home</title>
@@ -61,43 +62,30 @@
 
                 <!-- Skills Offerings Grid -->
                 <div class="skills-content">
-                    <div class="skills-grid">
-                        <article class="skill-card">
-                            <h3 class="skill-title">Python Tutoring</h3>
-                            <p class="skill-description">Learn Python fundamentals with hands-on projects and pair-programming.</p>
-                            <div class="skill-meta">
-                                <span class="skill-provider">Provider: Alex Chen</span>
-                                <span class="skill-price">$20 / hr</span>
-                            </div>
-                        </article>
+                    <div class="skills-grid" id="skillsGrid"></div>
 
-                        <article class="skill-card">
-                            <h3 class="skill-title">Resume Review</h3>
-                            <p class="skill-description">Review your resume and provide feedback to help you land your dream job.</p>
-                            <div class="skill-meta">
-                                <span class="skill-provider">Provider: Maria Garcia</span>
-                                <span class="skill-price">$0 / hr</span>
-                            </div>
-                        </article>
+                    <section id="create-skill" class="create-skill-card">
+                        <h3>Offer a Skill</h3>
+                        <form id="createSkillForm">
+                            <label for="skillTitle">Title:</label>
+                            <input type="text" id="skillTitle" name="skillTitle" required>
 
-                        <article class="skill-card">
-                            <h3 class="skill-title">Web Development</h3>
-                            <p class="skill-description">Learn the fundamentals of web development, including HTML, CSS, and JavaScript.</p>
-                            <div class="skill-meta">
-                                <span class="skill-provider">Provider: Liam Smith</span>
-                                <span class="skill-price">$25 / hr</span>
-                            </div>
-                        </article>
+                            <label for="skillCategory">Category:</label>
+                            <select id="skillCategory" name="skillCategory" required>
+                                <option value="Programming">Programming</option>
+                                <option value="Career">Career</option>
+                                <option value="Music">Music</option>
+                            </select>
 
-                        <article class="skill-card">
-                            <h3 class="skill-title">Guitar Lessons</h3>
-                            <p class="skill-description">Learn chords, strumming patterns, and how to play your favorite songs in structured 45-minute sessions.</p>
-                            <div class="skill-meta">
-                                <span class="skill-provider">Provider: Elena Rostova</span>
-                                <span class="skill-price">$15 / hr</span>
-                            </div>
-                        </article>
-                    </div>
+                            <label for="skillPrice">Price ($ / hr):</label>
+                            <input type="number" id="skillPrice" name="skillPrice" min="0" step="0.01" required>
+
+                            <label for="skillDescription">Description:</label>
+                            <textarea id="skillDescription" name="skillDescription" rows="3" required></textarea>
+
+                            <button type="submit" id="createSkillButton">Add Skill</button>
+                        </form>
+                    </section>
                 </div>
             </div>
         </section>
