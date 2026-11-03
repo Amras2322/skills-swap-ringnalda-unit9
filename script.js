@@ -1,25 +1,51 @@
-const cards = document.querySelectorAll('.skill-card');
+const skillsGrid = document.getElementById('skillsGrid');
+const categoryFilter = document.getElementById('categoryFilter');
+const skillForm = document.getElementById('createSkillForm');
 
-cards.forEach(card => {
-    card.addEventListener('click', () => {
-        const title = card.querySelector('.skill-title').textContent;
-        alert(title + ' clicked');
+let skills = [];
+
+function skillCardHtml(skill) {
+    return (
+        '<article class="skill-card">' +
+            '<h3 class="skill-title">' + skill.title + '</h3>' +
+            '<p class="skill-description">' + skill.description + '</p>' +
+            '<div class="skill-meta">' +
+                '<span class="skill-category">' + skill.category + '</span>' +
+                '<span class="skill-price">$' + skill.price + ' / hr</span>' +
+            '</div>' +
+        '</article>'
+    );
+}
+
+function attachCardListeners() {
+    document.querySelectorAll('.skill-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const title = card.querySelector('.skill-title').textContent;
+            alert(title + ' clicked');
+        });
     });
-});
+}
 
-categoryFilter.addEventListener('change', () => {
-    const filteredSkills = filterSkillsByCategory(skills, categoryFilter.value);
-    const filteredTitles = filteredSkills.map(s => s.title);
+function renderSkills(skillList) {
+    skillsGrid.innerHTML = skillList.map(skillCardHtml).join('');
+    attachCardListeners();
+}
 
-    cards.forEach(card => {
-        const title = card.querySelector('.skill-title').textContent.trim();
-        if (filteredTitles.includes(title)) {
-            card.style.display = ''; // visible
-        } else {
-            card.style.display = 'none'; // hidden
-        }
-    });
-});
+async function loadSkills() {
+    try {
+        skills = await window.apiService.fetchSkills();
+        applyFilter();
+    } catch (error) {
+        console.error('Error loading skills:', error);
+    }
+}
+
+function applyFilter() {
+    const filtered = filterSkillsByCategory(skills, categoryFilter.value);
+    renderSkills(filtered);
+}
+
+categoryFilter.addEventListener('change', applyFilter);
 
 document.getElementById('calculateCostButton').addEventListener('click', () => {
     const rate = parseFloat(document.getElementById('hourlyRate').value);
@@ -47,3 +73,24 @@ document.getElementById('findMatchButton').addEventListener('click', () => {
         ).join('');
     }
 });
+
+skillForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const skillData = {
+        title: document.getElementById('skillTitle').value,
+        category: document.getElementById('skillCategory').value,
+        price: parseFloat(document.getElementById('skillPrice').value),
+        description: document.getElementById('skillDescription').value,
+    };
+
+    try {
+        await window.apiService.createSkill(skillData);
+        skillForm.reset();
+        await loadSkills();
+    } catch (error) {
+        console.error('Error creating skill:', error);
+    }
+});
+
+loadSkills();
